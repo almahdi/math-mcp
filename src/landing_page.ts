@@ -39,14 +39,14 @@ export function renderLandingPage(workerUrl: string): string {
 </head>
 <body class="flex flex-col min-h-screen">
     <nav class="sticky top-0 z-50 w-full bg-white/80 dark:bg-zinc-950/80 backdrop-blur-md border-b border-slate-200 dark:border-white/5">
-        <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+        <div class="max-w-5xl mx-auto px-6 h-16 flex items-center justify-between">
             <div class="flex items-center gap-3">
                 <div class="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center text-white">
                     <i data-lucide="sigma" class="w-5 h-5"></i>
                 </div>
                 <div>
-                    <h1 class="font-bold text-lg">Ali's Math <span class="text-indigo-600">MCP</span> Server</h1>
-                    <p class="text-[10px] uppercase tracking-widest text-slate-400 font-bold">Innovation Architect Edition</p>
+                    <h1 class="font-bold text-lg leading-tight">Ali's Math <span class="text-indigo-600">MCP</span></h1>
+                    <p class="text-[10px] uppercase tracking-widest text-slate-400 font-bold">Inspiration Through Calculation</p>
                 </div>
             </div>
             <div class="flex items-center gap-4">
@@ -59,14 +59,14 @@ export function renderLandingPage(workerUrl: string): string {
         </div>
     </nav>
 
-    <main class="max-w-7xl mx-auto w-full px-6 py-12 grid grid-cols-1 lg:grid-cols-12 gap-12 text-center lg:text-left">
-        <div class="lg:col-span-8 space-y-8">
+    <main class="max-w-5xl mx-auto w-full px-6 py-12 flex-grow space-y-12">
+        <section class="space-y-8">
             <header class="flex flex-col md:flex-row md:items-end justify-between gap-6">
                 <div>
-                    <h2 class="text-4xl font-black tracking-tight mb-2 uppercase italic text-indigo-600">Innovator's Console</h2>
-                    <p class="text-slate-500 text-sm max-w-lg">Advanced workstation for mathematical modeling and experimentation.</p>
+                    <h2 class="text-3xl font-black tracking-tight mb-2 uppercase italic text-indigo-600">Innovator's Console</h2>
+                    <p class="text-slate-500 text-sm max-w-lg">Stateful mathematical workstation powered by mathjs.</p>
                 </div>
-                <div class="flex gap-2 justify-center lg:justify-start">
+                <div class="flex gap-2">
                     <button id="clearConsole" class="btn-secondary text-xs"><i data-lucide="trash-2" class="w-3.5 h-3.5 mr-2 text-slate-400"></i>Clear</button>
                     <button id="addCell" class="btn-primary text-xs"><i data-lucide="plus" class="w-3.5 h-3.5 mr-2"></i>New Cell</button>
                 </div>
@@ -75,45 +75,50 @@ export function renderLandingPage(workerUrl: string): string {
             <div id="worksheet" class="space-y-2 border-l-2 border-slate-100 dark:border-white/5 pl-4">
                 <!-- Cells injected here -->
             </div>
-            
-            <div class="pt-8 border-t border-slate-100 dark:border-white/5">
-                <div class="flex flex-col gap-2 items-center lg:items-start">
-                    <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest">MCP Server Endpoint</h3>
-                    <div class="px-4 py-2 bg-slate-100 dark:bg-white/5 rounded-lg font-mono text-sm text-indigo-600 dark:text-indigo-400 flex items-center gap-3">
-                        <code id="mcpUrl">${mcpUrl}</code>
-                        <button onclick="copy('mcpUrl')" class="hover:text-indigo-500 transition-colors"><i data-lucide="copy" class="w-4 h-4"></i></button>
-                    </div>
+        </section>
+
+        <section class="pt-8 border-t border-slate-100 dark:border-white/5">
+            <div class="flex flex-col gap-2 items-center lg:items-start">
+                <h3 class="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] mb-1">MCP Server Endpoint</h3>
+                <div class="px-4 py-2 bg-slate-100 dark:bg-white/5 rounded-lg font-mono text-sm text-indigo-600 dark:text-indigo-400 flex items-center gap-3">
+                    <code id="mcpUrl">${mcpUrl}</code>
+                    <button onclick="copy('mcpUrl')" class="hover:text-indigo-500 transition-colors"><i data-lucide="copy" class="w-4 h-4"></i></button>
                 </div>
             </div>
-        </div>
-
-        <div class="lg:col-span-4 space-y-8">
-            <section class="card p-6 scale-100 hover:scale-[1.02] cursor-default border-indigo-600/10 hover:border-indigo-600/30">
-                <div class="flex items-center gap-4 mb-6">
-                    <div class="w-12 h-12 rounded-full bg-indigo-50 dark:bg-indigo-900/20 flex items-center justify-center text-indigo-600">
-                        <i data-lucide="user-astronomical" class="w-6 h-6"></i>
-                    </div>
-                    <div>
-                        <h3 class="font-bold text-lg text-slate-900 dark:text-white">Ali Almahdi</h3>
-                        <p class="text-[10px] uppercase tracking-wider font-bold text-slate-400">Innovation Architect</p>
-                    </div>
-                </div>
-                <p class="text-xs text-slate-500 italic mb-6">"Bridging the gap between artificial intelligence and tangible human progress."</p>
-                <div class="flex gap-4 justify-center lg:justify-start">
-                    <a href="https://x.com/alialmahdi" target="_blank" class="text-slate-400 hover:text-indigo-500"><i data-lucide="twitter" class="w-5 h-5"></i></a>
-                    <a href="https://linkedin.com/in/alialmahdi" target="_blank" class="text-slate-400 hover:text-indigo-500"><i data-lucide="linkedin" class="w-5 h-5"></i></a>
-                </div>
-            </section>
-        </div>
+        </section>
     </main>
 
-    <footer class="mt-auto border-t border-slate-200 dark:border-white/5 bg-white dark:bg-zinc-950 py-8">
-        <div class="max-w-7xl mx-auto px-6 text-center space-y-4">
-            <p class="text-slate-400 text-xs font-medium tracking-tight">Built by Ali Almahdi — Providing reliable tech since 1999</p>
-            <div class="flex justify-center gap-4 text-[10px] uppercase font-bold tracking-widest text-slate-500/80">
-                <a href="https://ali.ac/terms" target="_blank" class="hover:text-indigo-500 transition-colors">Terms</a>
-                <span>&bull;</span>
-                <a href="https://ali.ac/privacy" target="_blank" class="hover:text-indigo-500 transition-colors">Privacy</a>
+    <footer class="border-t border-slate-100 dark:border-white/5 bg-slate-50/30 dark:bg-zinc-950/50 py-16">
+        <div class="max-w-5xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+            <div class="space-y-6 text-center md:text-left">
+                <div class="flex items-center justify-center md:justify-start gap-4">
+                    <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white shadow-lg shadow-indigo-500/20">
+                        <i data-lucide="user-astronomical" class="w-8 h-8"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-2xl text-slate-900 dark:text-white leading-tight">Ali Almahdi</h3>
+                        <p class="text-xs uppercase tracking-[0.2em] font-bold text-indigo-600 dark:text-indigo-400">Innovation Architect</p>
+                    </div>
+                </div>
+                <blockquote class="text-lg text-slate-500 dark:text-slate-400 leading-relaxed max-w-md mx-auto md:mx-0 font-medium">
+                    "Bridging the gap between artificial intelligence and tangible human progress."
+                </blockquote>
+                <div class="flex justify-center md:justify-start gap-4">
+                    <a href="https://x.com/alialmahdi" target="_blank" class="p-3 bg-white dark:bg-white/5 rounded-xl border border-slate-200 dark:border-white/5 text-slate-400 hover:text-indigo-500 transition-all hover:shadow-md"><i data-lucide="twitter" class="w-5 h-5"></i></a>
+                    <a href="https://linkedin.com/in/alialmahdi" target="_blank" class="p-3 bg-white dark:bg-white/5 rounded-xl border border-slate-200 dark:border-white/5 text-slate-400 hover:text-indigo-500 transition-all hover:shadow-md"><i data-lucide="linkedin" class="w-5 h-5"></i></a>
+                    <a href="https://ali.ac" target="_blank" class="p-3 bg-white dark:bg-white/5 rounded-xl border border-slate-200 dark:border-white/5 text-slate-400 hover:text-indigo-500 transition-all hover:shadow-md"><i data-lucide="globe" class="w-5 h-5"></i></a>
+                </div>
+            </div>
+            
+            <div class="flex flex-col items-center md:items-end space-y-6 text-center md:text-right border-t md:border-t-0 md:border-l border-slate-200 dark:border-white/10 pt-12 md:pt-0 md:pl-12">
+                <p class="text-slate-400 text-sm font-medium leading-loose max-w-xs">
+                    Ali's Math MCP Server — providing reliable, high-precision technical infrastructure since 1999.
+                </p>
+                <div class="flex gap-6 text-[10px] uppercase font-black tracking-[0.2em] text-slate-500">
+                    <a href="https://ali.ac/terms" target="_blank" class="hover:text-indigo-600 transition-colors">Terms</a>
+                    <a href="https://ali.ac/privacy" target="_blank" class="hover:text-indigo-600 transition-colors">Privacy</a>
+                    <a href="/health" class="hover:text-indigo-600 transition-colors">Status</a>
+                </div>
             </div>
         </div>
     </footer>

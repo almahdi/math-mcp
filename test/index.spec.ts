@@ -17,7 +17,7 @@ describe('Math MCP worker', () => {
 		expect(await response.text()).toContain("Math MCP Server");
 	});
 
-	it('responds to MCP tool call (integration)', async () => {
+	it('responds to MCP tool call (evaluate)', async () => {
 		const response = await SELF.fetch('http://example.com/mcp', {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
@@ -25,8 +25,8 @@ describe('Math MCP worker', () => {
 				jsonrpc: '2.0',
 				method: 'tools/call',
 				params: {
-					name: 'add',
-					arguments: { a: 10, b: 20 }
+					name: 'evaluate',
+					arguments: { expression: '2 + 3 * 4' }
 				},
 				id: 1
 			})
@@ -38,10 +38,31 @@ describe('Math MCP worker', () => {
 			jsonrpc: '2.0',
 			id: 1,
 			result: {
-				content: [{ type: 'text', text: '30' }],
+				content: [{ type: 'text', text: '14' }],
 				isError: false
 			}
 		});
+	});
+
+	it('responds to MCP tool call (evaluate with units)', async () => {
+		const response = await SELF.fetch('http://example.com/mcp', {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({
+				jsonrpc: '2.0',
+				method: 'tools/call',
+				params: {
+					name: 'evaluate',
+					arguments: { expression: '10 cm to inch' }
+				},
+				id: 2
+			})
+		});
+		
+		const result = await response.json() as any;
+		const responseObj = Array.isArray(result) ? result[0] : result;
+		// 10 cm is approx 3.93701 inches
+		expect(responseObj.result.content[0].text).toContain('3.937');
 	});
 
 	it('responds to OPTIONS request for CORS', async () => {
@@ -65,14 +86,14 @@ describe('Math MCP worker', () => {
 				jsonrpc: '2.0',
 				method: 'tools/list',
 				params: {},
-				id: 2
+				id: 3
 			})
 		});
 		
 		const result = await response.json() as any;
 		const responseObj = Array.isArray(result) ? result[0] : result;
 		expect(responseObj.result.tools).toContainEqual(expect.objectContaining({
-			name: 'add'
+			name: 'evaluate'
 		}));
 	});
 });

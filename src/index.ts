@@ -1,51 +1,30 @@
 import { HttpLayerRouter, HttpServerResponse } from "@effect/platform"
 import { McpServer, Tool, Toolkit } from "@effect/ai"
 import { Effect, Layer, Schema } from "effect"
+// @ts-ignore
+import math from "mathjs/lib/browser/math.js"
 
 // ======================
 // MATH TOOLS
 // ======================
-const MathParams = {
-  a: Schema.Number,
-  b: Schema.Number
-}
-
-const AddTool = Tool.make("add", {
-  description: "Adds two numbers together",
-  parameters: MathParams,
-  success: Schema.Number
-})
-
-const SubtractTool = Tool.make("subtract", {
-  description: "Subtracts two numbers",
-  parameters: MathParams,
-  success: Schema.Number
-})
-
-const MultiplyTool = Tool.make("multiply", {
-  description: "Multiplies two numbers",
-  parameters: MathParams,
-  success: Schema.Number
-})
-
-const DivideTool = Tool.make("divide", {
-  description: "Divides two numbers",
-  parameters: MathParams,
-  success: Schema.Number,
+const EvaluateTool = Tool.make("evaluate", {
+  description: "Evaluates a mathematical expression using mathjs. Supports basic arithmetic, units, matrices, and more.",
+  parameters: {
+    expression: Schema.String
+  },
+  success: Schema.Unknown,
   failure: Schema.String
 })
 
-const mathToolkit = Toolkit.make(AddTool, SubtractTool, MultiplyTool, DivideTool)
+const mathToolkit = Toolkit.make(EvaluateTool)
 
 // Handlers
 const MathHandlers = mathToolkit.toLayer({
-  add: ({ a, b }) => Effect.succeed(a + b),
-  subtract: ({ a, b }) => Effect.succeed(a - b),
-  multiply: ({ a, b }) => Effect.succeed(a * b),
-  divide: ({ a, b }) => 
-    b === 0 
-      ? Effect.fail("Division by zero")
-      : Effect.succeed(a / b)
+  evaluate: ({ expression }) =>
+    Effect.try({
+      try: () => math.evaluate(expression),
+      catch: (error) => String(error)
+    })
 })
 
 // ======================
@@ -65,20 +44,32 @@ const WebRoutes = HttpLayerRouter.addAll([
         </style>
       </head>
       <body>
-        <h1>🧮 Math MCP Server</h1>
-        <p>Effect AI MCP Server running on Cloudflare Workers.</p>
+        <h1>🧮 Math MCP Server (mathjs)</h1>
+        <p>Effect AI MCP Server running on Cloudflare Workers, powered by mathjs.</p>
         <p>This server supports the HTTP transport (POST to <code>/mcp</code>).</p>
         <ul>
           <li><strong>GET /health</strong> - Check server status</li>
           <li><strong>POST /mcp</strong> - MCP Protocol endpoint</li>
         </ul>
         <hr/>
+        <h2>Usage</h2>
+        <p>Call the <code>evaluate</code> tool with an <code>expression</code> string.</p>
+        <pre>
+// Request
+{
+  "method": "tools/call",
+  "params": {
+    "name": "evaluate",
+    "arguments": { "expression": "12 cm to inch" }
+  }
+}
+        </pre>
         <p>To use with MCP Inspector:</p>
         <code>npx @modelcontextprotocol/inspector --url https://<your-worker>.workers.dev/mcp</code>
       </body>
     </html>
   `)),
-  HttpLayerRouter.route("GET", "/health", HttpServerResponse.json({ status: "ok" })),
+  HttpLayerRouter.route("GET", "/health", HttpServerResponse.json({ status: "ok", engine: "mathjs" })),
   HttpLayerRouter.route("GET", "/mcp", HttpServerResponse.text("MCP HTTP JSON-RPC endpoint. Use POST."))
 ])
 

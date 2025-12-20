@@ -7,5 +7,12 @@ export default defineWorkersConfig({
 				wrangler: { configPath: './wrangler.jsonc' },
 			},
 		},
+		deps: {
+			optimizer: {
+				web: {
+					include: ['mathjs'],
+				},
+			},
+		},
 	},
 });

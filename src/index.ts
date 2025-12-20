@@ -3,6 +3,7 @@ import { McpServer, Tool, Toolkit } from "@effect/ai"
 import { Effect, Layer, Schema } from "effect"
 // @ts-ignore
 import math from "mathjs/lib/browser/math.js"
+import { renderLandingPage } from "./landing_page"
 
 // ======================
 // MATH TOOLS
@@ -58,49 +59,12 @@ const MathHandlers = mathToolkit.toLayer({
 // LAYERS
 // ======================
 const WebRoutes = HttpLayerRouter.addAll([
-  HttpLayerRouter.route("GET", "/", HttpServerResponse.html(`
-    <!DOCTYPE html>
-    <html>
-      <head>
-        <title>Math MCP Server</title>
-        <style>
-          body { font-family: system-ui, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
-          h1 { color: #2563eb; }
-          code { background: #f3f4f6; padding: 2px 6px; border-radius: 4px; }
-          pre { background: #1f2937; color: #f3f4f6; padding: 16px; border-radius: 8px; overflow-x: auto; }
-        </style>
-      </head>
-      <body>
-        <h1>🧮 Math MCP Server (mathjs)</h1>
-        <p>Effect AI MCP Server running on Cloudflare Workers, powered by mathjs.</p>
-        <p>This server supports the HTTP transport (POST to <code>/mcp</code>).</p>
-        <ul>
-          <li><strong>GET /health</strong> - Check server status</li>
-          <li><strong>POST /mcp</strong> - MCP Protocol endpoint</li>
-        </ul>
-        <hr/>
-        <h2>Tool: evaluate</h2>
-        <p>Call the <code>evaluate</code> tool with an <code>expression</code> string.</p>
-        <pre>
-{
-  "method": "tools/call",
-  "params": {
-    "name": "evaluate",
-    "arguments": { "expression": "12 cm to inch" }
-  }
-}
-        </pre>
-        <h2>Prompts</h2>
-        <ul>
-          <li><code>mathjs-help</code>: Documentation for supported math syntax.</li>
-          <li><code>explain-math(topic)</code>: Helper to explain concepts.</li>
-        </ul>
-        <hr/>
-        <p>To use with MCP Inspector:</p>
-        <code>npx @modelcontextprotocol/inspector --url https://<your-worker>.workers.dev/mcp</code>
-      </body>
-    </html>
-  `)),
+  HttpLayerRouter.route("GET", "/", (request) => {
+    const host = request.headers["host"] ?? "localhost:8787"
+    const protocol = host.includes("localhost") ? "http" : "https"
+    const fullUrl = `${protocol}://${host}${request.url}`
+    return Effect.succeed(HttpServerResponse.html(renderLandingPage(fullUrl)))
+  }),
   HttpLayerRouter.route("GET", "/health", HttpServerResponse.json({ status: "ok", engine: "mathjs" })),
   HttpLayerRouter.route("GET", "/mcp", HttpServerResponse.text("MCP HTTP JSON-RPC endpoint. Use POST."))
 ])
@@ -134,5 +98,5 @@ const AppLayer = HttpLayerRouter.layer.pipe(
 const { handler } = HttpLayerRouter.toWebHandler(AppLayer, {})
 
 export default {
-  fetch: (request, env, ctx) => handler(request as any)
+  fetch: (request, _env, _ctx) => handler(request as any)
 } satisfies ExportedHandler

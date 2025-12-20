@@ -17,8 +17,62 @@ describe('Math MCP worker', () => {
 		expect(await response.text()).toContain("Math MCP Server");
 	});
 
-	it('responds with health check (integration style)', async () => {
-		const response = await SELF.fetch('https://example.com/health');
-		expect(await response.json()).toEqual({ status: "ok" });
+	it('responds to MCP tool call (integration)', async () => {
+		const response = await SELF.fetch('http://example.com/mcp', {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({
+				jsonrpc: '2.0',
+				method: 'tools/call',
+				params: {
+					name: 'add',
+					arguments: { a: 10, b: 20 }
+				},
+				id: 1
+			})
+		});
+		
+		const result = await response.json() as any;
+		const responseObj = Array.isArray(result) ? result[0] : result;
+		expect(responseObj).toMatchObject({
+			jsonrpc: '2.0',
+			id: 1,
+			result: {
+				content: [{ type: 'text', text: '30' }],
+				isError: false
+			}
+		});
+	});
+
+	it('responds to OPTIONS request for CORS', async () => {
+		const response = await SELF.fetch('https://example.com/mcp', {
+			method: 'OPTIONS',
+			headers: {
+				'Origin': 'http://localhost:3000',
+				'Access-Control-Request-Method': 'POST',
+				'Access-Control-Request-Headers': 'Content-Type'
+			}
+		});
+		expect(response.status).toBe(204);
+		expect(response.headers.get('Access-Control-Allow-Origin')).toBe('*');
+	});
+
+	it('lists tools correctly', async () => {
+		const response = await SELF.fetch('http://example.com/mcp', {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({
+				jsonrpc: '2.0',
+				method: 'tools/list',
+				params: {},
+				id: 2
+			})
+		});
+		
+		const result = await response.json() as any;
+		const responseObj = Array.isArray(result) ? result[0] : result;
+		expect(responseObj.result.tools).toContainEqual(expect.objectContaining({
+			name: 'add'
+		}));
 	});
 });

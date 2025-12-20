@@ -78,7 +78,7 @@ describe('Math MCP worker', () => {
 		expect(response.headers.get('Access-Control-Allow-Origin')).toBe('*');
 	});
 
-	it('lists tools correctly', async () => {
+	it('lists tools and prompts correctly', async () => {
 		const response = await SELF.fetch('http://example.com/mcp', {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
@@ -91,9 +91,49 @@ describe('Math MCP worker', () => {
 		});
 		
 		const result = await response.json() as any;
-		const responseObj = Array.isArray(result) ? result[0] : result;
-		expect(responseObj.result.tools).toContainEqual(expect.objectContaining({
+		const toolsObj = Array.isArray(result) ? result[0] : result;
+		expect(toolsObj.result.tools).toContainEqual(expect.objectContaining({
 			name: 'evaluate'
 		}));
+
+		const promptsResponse = await SELF.fetch('http://example.com/mcp', {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({
+				jsonrpc: '2.0',
+				method: 'prompts/list',
+				params: {},
+				id: 4
+			})
+		});
+		const promptsResult = await promptsResponse.json() as any;
+		const promptsObj = Array.isArray(promptsResult) ? promptsResult[0] : promptsResult;
+		expect(promptsObj.result.prompts).toContainEqual(expect.objectContaining({
+			name: 'mathjs-help'
+		}));
+		expect(promptsObj.result.prompts).toContainEqual(expect.objectContaining({
+			name: 'explain-math'
+		}));
+	});
+
+	it('retrieves a prompt correctly', async () => {
+		const response = await SELF.fetch('http://example.com/mcp', {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({
+				jsonrpc: '2.0',
+				method: 'prompts/get',
+				params: {
+					name: 'explain-math',
+					arguments: { topic: 'calculus' }
+				},
+				id: 5
+			})
+		});
+		
+		const result = await response.json() as any;
+		const responseObj = Array.isArray(result) ? result[0] : result;
+		expect(responseObj.result.messages[0].content.text).toContain('calculus');
+		expect(responseObj.result.messages[0].content.text).toContain('evaluate');
 	});
 });

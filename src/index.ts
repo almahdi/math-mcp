@@ -18,6 +18,33 @@ const EvaluateTool = Tool.make("evaluate", {
 
 const mathToolkit = Toolkit.make(EvaluateTool)
 
+// ======================
+// PROMPTS
+// ======================
+const MathjsHelpPrompt = McpServer.prompt({
+  name: "mathjs-help",
+  description: "Get help and examples for mathjs syntax and features.",
+  content: () =>
+    Effect.succeed(`The 'evaluate' tool uses mathjs. Here are some advanced capabilities:
+- Units: '10 cm to inch', '2 kg + 500 g', '50 mph in km/h'
+- Matrices: 'det([[1, 2], [3, 4]])', 'inv([[1, 2], [3, 4]])'
+- Complex: 'sqrt(-4)', '2 + 3i * (4 - 2i)'
+- Trigonometry: 'sin(45 deg)', 'atan2(3, -3)'
+- Statistics: 'mean(1, 2, 3, 4)', 'std(1, 2, 3, 4)'`)
+})
+
+const ExplainMathPrompt = McpServer.prompt({
+  name: "explain-math",
+  description: "Get a prompt that asks to explain a mathematical concept with an example evaluate call.",
+  parameters: Schema.Struct({
+    topic: Schema.String.annotations({ description: "The math topic to explain" })
+  }),
+  content: ({ topic }) =>
+    Effect.succeed(
+      `Please explain the concept of ${topic}. After the explanation, provide a specific example of how to calculate a related value using the 'evaluate' tool.`
+    )
+})
+
 // Handlers
 const MathHandlers = mathToolkit.toLayer({
   evaluate: ({ expression }) =>
@@ -52,10 +79,9 @@ const WebRoutes = HttpLayerRouter.addAll([
           <li><strong>POST /mcp</strong> - MCP Protocol endpoint</li>
         </ul>
         <hr/>
-        <h2>Usage</h2>
+        <h2>Tool: evaluate</h2>
         <p>Call the <code>evaluate</code> tool with an <code>expression</code> string.</p>
         <pre>
-// Request
 {
   "method": "tools/call",
   "params": {
@@ -64,6 +90,12 @@ const WebRoutes = HttpLayerRouter.addAll([
   }
 }
         </pre>
+        <h2>Prompts</h2>
+        <ul>
+          <li><code>mathjs-help</code>: Documentation for supported math syntax.</li>
+          <li><code>explain-math(topic)</code>: Helper to explain concepts.</li>
+        </ul>
+        <hr/>
         <p>To use with MCP Inspector:</p>
         <code>npx @modelcontextprotocol/inspector --url https://<your-worker>.workers.dev/mcp</code>
       </body>
@@ -84,7 +116,9 @@ const McpLayer = McpServer.layerHttpRouter({
 // App Layer composition
 const McpCombined = McpRegistration.pipe(
   Layer.provide(McpLayer),
-  Layer.provide(MathHandlers)
+  Layer.provide(MathHandlers),
+  Layer.provideMerge(MathjsHelpPrompt),
+  Layer.provideMerge(ExplainMathPrompt)
 )
 
 const AppLayer = HttpLayerRouter.layer.pipe(

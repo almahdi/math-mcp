@@ -5,6 +5,11 @@ import { Effect, Layer, Schema } from "effect"
 import math from "mathjs/lib/browser/math.js"
 import { renderLandingPage } from "./landing_page"
 
+const FAVICON_SVG = `<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
+  <rect width="32" height="32" rx="6" fill="#4f46e5"/>
+  <path d="M23 10V8a1.5 1.5 0 0 0-1.5-1.5H9.75a.75.75 0 0 0-.6 1.2l6 8a3 3 0 0 1 0 3.6l-6 8a.75.75 0 0 0 .6 1.2h11.75a1.5 1.5 0 0 0 1.5-1.5v-2.5" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>`
+
 // ======================
 // MATH TOOLS
 // ======================
@@ -65,6 +70,11 @@ const WebRoutes = HttpLayerRouter.addAll([
     const fullUrl = `${protocol}://${host}${request.url}`
     return Effect.succeed(HttpServerResponse.html(renderLandingPage(fullUrl)))
   }),
+  HttpLayerRouter.route("GET", "/favicon.svg", () =>
+    Effect.succeed(HttpServerResponse.text(FAVICON_SVG, {
+      headers: { "content-type": "image/svg+xml" }
+    }))
+  ),
   HttpLayerRouter.route("GET", "/health", HttpServerResponse.json({ status: "ok", engine: "mathjs" })),
   HttpLayerRouter.route("GET", "/mcp", HttpServerResponse.text("MCP HTTP JSON-RPC endpoint. Use POST."))
 ])

@@ -12,6 +12,7 @@ export function renderLandingPage(workerUrl: string): string {
     <meta property="og:title" content="Ali's Math MCP Server">
     <meta property="og:description" content="Interactive mathematical console powered by mathjs and MCP. Stateful calculations with real-time results.">
     <meta property="og:type" content="website">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/mathjs@15.1.0/lib/browser/math.js"></script>
     <script src="https://unpkg.com/lucide@latest"></script>

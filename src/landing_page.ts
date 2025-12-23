@@ -91,7 +91,7 @@ export function renderLandingPage(workerUrl: string): string {
         <section class="space-y-8">
             <header class="flex flex-col md:flex-row md:items-end justify-between gap-6">
                 <div>
-                    <h2 class="text-3xl font-black tracking-tight mb-2 uppercase italic text-indigo-600">Innovator's Console</h2>
+                    <h2 class="text-3xl font-black tracking-tight mb-2 uppercase italic text-indigo-600">Interactive Console</h2>
                     <p class="text-slate-500 text-sm max-w-lg">Stateful mathematical workstation powered by mathjs.</p>
                 </div>
                 <div class="flex gap-2">

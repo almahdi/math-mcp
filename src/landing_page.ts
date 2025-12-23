@@ -134,6 +134,7 @@ export function renderLandingPage(workerUrl: string): string {
                 <div class="flex justify-center md:justify-start gap-4">
                     <a href="https://x.com/alialmahdi" target="_blank" class="p-3 bg-white dark:bg-white/5 rounded-xl border border-slate-200 dark:border-white/5 text-slate-400 hover:text-indigo-500 transition-all hover:shadow-md"><i data-lucide="twitter" class="w-5 h-5"></i></a>
                     <a href="https://linkedin.com/in/alialmahdi" target="_blank" class="p-3 bg-white dark:bg-white/5 rounded-xl border border-slate-200 dark:border-white/5 text-slate-400 hover:text-indigo-500 transition-all hover:shadow-md"><i data-lucide="linkedin" class="w-5 h-5"></i></a>
+                    <a href="https://github.com/almahdi/math-mcp" target="_blank" class="p-3 bg-white dark:bg-white/5 rounded-xl border border-slate-200 dark:border-white/5 text-slate-400 hover:text-indigo-500 transition-all hover:shadow-md"><i data-lucide="github" class="w-5 h-5"></i></a>
                     <a href="https://ali.ac" target="_blank" class="p-3 bg-white dark:bg-white/5 rounded-xl border border-slate-200 dark:border-white/5 text-slate-400 hover:text-indigo-500 transition-all hover:shadow-md"><i data-lucide="globe" class="w-5 h-5"></i></a>
                 </div>
             </div>

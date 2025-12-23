@@ -14,7 +14,7 @@ describe('Math MCP worker', () => {
 		const response = await worker.fetch(request, env, ctx);
 		// Wait for all `Promise`s passed to `ctx.waitUntil()` to settle before running test assertions
 		await waitOnExecutionContext(ctx);
-		expect(await response.text()).toContain("Effect AI Math Console");
+		expect(await response.text()).toContain("Ali's Math MCP");
 	});
 
 	it('responds to MCP tool call (evaluate)', async () => {

@@ -1,7 +1,11 @@
 {
 	"name": "math-mcp",
-	"version": "0.0.0",
-	"private": true,
+	"version": "1.0.0",
+	"license": "AGPL-3.0",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/almahdi/math-mcp.git"
+	},
 	"scripts": {
 		"deploy": "wrangler deploy",
 		"dev": "wrangler dev",

@@ -72,8 +72,8 @@ const WebRoutes = HttpLayerRouter.addAll([
 const McpRegistration = Layer.effectDiscard(McpServer.registerToolkit(mathToolkit))
 
 const McpLayer = McpServer.layerHttpRouter({
-  name: "Math Server",
-  version: "1.0.0",
+  name: "Alis Math Server",
+  version: "0.0.1",
   path: "/mcp"
 })
 
